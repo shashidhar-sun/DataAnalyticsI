@@ -265,6 +265,7 @@ if (status == 0) {
 			req <- Request$new(env)
 			res <- Response$new()
 			res$header('Content-type', 'application/json')
+			res$header('Access-Control-Allow-Origin', '*')
 			coordinates <- toString(req$params()["coords"])
 			res$write(Predict.CrimeScore.JSON(coordinates))
 			res$finish()
