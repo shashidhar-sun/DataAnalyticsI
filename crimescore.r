@@ -210,8 +210,8 @@ Predict.CrimeScore.JSON<-function(vec.in){
 	out.list <- list()
 
 	for (i in 1:(length(vec)/2)){
-		cs = i
-		# cs=Predict.CrimeScore(as.numeric(vec[((i*2)-1)]),as.numeric(vec[i*2]))
+		# cs = i
+		cs=Predict.CrimeScore(as.numeric(vec[((i*2)-1)]),as.numeric(vec[i*2]))
 		out.list[[i]] <- list(latitude=vec[((i*2)-1)], longitude=vec[i*2], crimescore=as.character(cs))
 	}
 	total.list=list(places=out.list)
