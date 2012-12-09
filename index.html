@@ -10,13 +10,17 @@
 	<script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&libraries=places&sensor=false"></script>
 	<script type="text/javascript">
-		$.ajax({
-			type: "GET",
-			url: "http://www.crimescore.us:8000/custom/crimescores",
-			data: { coords: "38.8325192140698,-76.9936390021642,38.90398,-77.05510" }
-		}).done(function(msg) {
-			alert( "Data Saved: " + msg );
-		});
+		var getCrimeScores = function(array) {
+			coordinates = "coords=" + array.join(",");
+			callback = "&callback=?";
+			data = coordinates + callback;
+			console.log(data);
+			$.getJSON("http://www.crimescore.us:8000/custom/crimescores", data);
+		}
+		// $.getJSON('http://www.crimescore.us:8000/custom/crimescores?coords=38.8325192140698,-76.9936390021642,38.90398,-77.05510&callback=?', null);
+		var processCrimeScores = function(data) { console.log(data); };
+		var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
+		getCrimeScores(testArray);
 	</script>
 	<script type="text/javascript">
 		var map;

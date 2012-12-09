@@ -264,10 +264,11 @@ if (status == 0) {
 		app = function(env) {
 			req <- Request$new(env)
 			res <- Response$new()
-			res$header('Content-type', 'application/json')
-			res$header('Access-Control-Allow-Origin', '*')
+			res$header('Content-type', 'application/javascript')
 			coordinates <- toString(req$params()["coords"])
+			res$write('processCrimeScores(')
 			res$write(Predict.CrimeScore.JSON(coordinates))
+			res$write(')')
 			res$finish()
 		}
 	)
