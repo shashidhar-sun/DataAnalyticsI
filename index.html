@@ -1,5 +1,5 @@
-	<!DOCTYPE html>
-	<html>
+<!DOCTYPE html>
+<html>
 	<head>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<style type="text/css">
@@ -15,6 +15,11 @@
 		var service;
 		var i;
 		var csPlaces = {}; // the array in which you will score crime scores.
+		var mar = new Array();
+		var loc;
+		var ic;
+		var infowindow = new Array();
+		var marker;
 		
 		var csPlace = function(lat, lng) {
 			this.latitude = lat;
@@ -66,7 +71,6 @@
 			coordinates = "coords=" + array.join(",");
 			callback = "&callback=?";
 			data = coordinates + callback;
-			console.log(data);
 			$.getJSON("http://www.crimescore.us:8000/custom/crimescores", data);
 		}
 		
@@ -115,11 +119,28 @@
 				if (!e) e = window.event;   
 				if (e.keyCode == '13')
 				{
+					
+					// // Shashi's code
+					// //alert((marker[0].position).toString());
+					// if (marker)
+					// {
+					// 	for (m in marker) {
+					// 		marker[m].setMap(null);
+					// 		//alert("marker error");
+					// 	}
+					// 	marker.length = 0;
+					// 	loc.length = 0;
+					// 	ic.length = 0;
+					// }
+					// marker = new Array();
+					// loc = new Array();
+					// ic = new Array();
+					
 					// Value of text box
 					var address = document.getElementById("val").value;
-				
+					
 					// var geocoder = new google.maps.Geocoder();
-				
+					
 					var request = {
 						// Hardcode location to center of Washington, D.C.
 						location: new google.maps.LatLng(38.89555, -77.0362),
@@ -132,8 +153,8 @@
 					// Send request to service
 					service.radarSearch(request, function(results, status)
 					{
-						i = 0;
-					
+						var i = 0;
+						
 						// Iterate over search results
 						for (var j = 0; j < results.length; j++)
 						{
@@ -152,7 +173,8 @@
 							// Fire off a request for a CrimeScore for each coordinate
 							getCrimeScore(lat, lng);
 						}
-					
+						
+						// // Shashi's code
 						// for(i = 0; i < results.length; i++)
 						// {
 						// 	var req = {reference: results[i].reference};
@@ -170,8 +192,8 @@
 						// 				a = "0" + cs[service.getDetails.i].toString();
 						// 			else
 						// 				a = cs[service.getDetails.i].toString();
-						// 			var b;
 						// 			
+						// 			var b;
 						// 			if ((100 - cs[service.getDetails.i]) < 10)
 						// 				b = "0" + (100 - cs[service.getDetails.i]).toString();
 						// 			else
@@ -181,17 +203,12 @@
 						// 			
 						// 			if (stat == google.maps.places.PlacesServiceStatus.OK)
 						// 			{
-						// 				
 						// 				//Call back end for crime score at place.geometry.location
-						// 				var beachMarker = new google.maps.Marker({
-						// 					position: place.geometry.location,
-						// 					map: map,
-						// 					icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
-						// 				});
+						// 				loc[service.getDetails.i - 1] = place.geometry.location;
+						// 				ic[service.getDetails.i - 1] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
 						// 			}
 						// 		});
 						// 	}
-						// 	
 						// 	else
 						// 	{
 						// 		var a;
@@ -206,22 +223,42 @@
 						// 		else
 						// 			b = (100 - cs[i]).toString();
 						// 		
-						// 		var beachMarker = new google.maps.Marker({
-						// 			position: results[i].geometry.location,
-						// 			map: map,
-						// 			icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
-						// 		});
+						// 		loc.push(results[i].geometry.location);
+						// 		ic[i] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
 						// 	}
+						// }
+						// 
+						// for (j = 0; j < loc.length; j++)
+						// {
+						// 	//alert(j);
+						// 	marker[j] = new google.maps.Marker({
+						// 		position: loc[j],
+						// 		map: map,
+						// 		icon: ic[j]
+						// 	});
+						// 	
+						// 	infowindow[j] = new google.maps.InfoWindow();
+						// 	//alert(ic[j]);
+						// 	infowindow[j].setContent(cs[j].toString());
+						// 	//infowindow[j].open(map, marker[j]);
+						// 	google.maps.event.addListener(marker[j], 'click', (function(marker,j)
+						// 	{
+						// 		return function()
+						// 		{
+						// 			// alert(j);
+						// 			infowindow[j].open(map, marker);
+						// 		}  
+						// 	}(marker[j],j)));
 						// }
 					});
 				}
 			}
-		}
+		};
 		
 		
 		// Testing code
-		var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
-		getCrimeScores(testArray);
+		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
+		// getCrimeScores(testArray);
     </script>
 	</head>
 	<body onload="initialize()">
