@@ -7,8 +7,17 @@
 		body { height: 100%; margin: 500; padding: 0 }
 		#map_canvas { height: 100% }
 	</style>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&sensor=false"></script>
-	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&libraries=places&sensor=false"></script>
+	<script type="text/javascript">
+		$.ajax({
+			type: "GET",
+			url: "http://www.crimescore.us:12345/custom/crimescores",
+			data: { coords: "38.8325192140698,-76.9936390021642,38.90398,-77.05510" }
+		}).done(function(msg) {
+			alert( "Data Saved: " + msg );
+		});
+	</script
 	<script type="text/javascript">
 		var map;
 		var service;
@@ -23,24 +32,27 @@
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			
-			map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 			service = new google.maps.places.PlacesService(map);
 
 			google.maps.event.addListener(map, 'click', function(event) 
 			{
-				//call the backend for crime score at event.laLng and et the crime score
+				// Call the backend for crime score at event.laLng and et the crime score
 				var crimescore = 50;
+				
 				var a;
-				if (crimescore<10)
+				if (crimescore < 10)
 					a = "0" + crimescore.toString();
 				else
 					a = crimescore.toString();
+				
 				var b;
 				if ((100 - crimescore) < 10)
 					b = "0" + (100 - crimescore).toString();
 				else
 					b = (100 - crimescore).toString();
+					
 				var marker = new google.maps.Marker({
 					position: event.latLng,
 					map: map,
