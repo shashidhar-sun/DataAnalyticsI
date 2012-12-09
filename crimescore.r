@@ -93,7 +93,7 @@ dist.toNearest<-function(sample.lat,sample.long,attribute.lat,attribute.long){
 }
 
 # Import Military
-military=read.csv('data/military.csv')
+military=read.csv('data/Military.csv')
 military.coord=parse.coord(military)
 
 #Import Police_stations
@@ -171,6 +171,79 @@ do.distance<-function(lat,long){
 }
 comb.dat=read.csv('data/pred.file.csv')
 
+#######################################################################
+# PART 3 FIT RANDOM FOREST MODEL                  #
+#######################################################################
+#Fit Random Forest
+set.seed(1282012)
+comb.dat=comb.dat[,-1]
+
+#Partial dependence plots of 9 most important variables
+rf2=randomForest(crime.scores~.,data=comb.dat,importance=T)
+
+#######################################################################
+# PART 4 PREDICTION USING RANDOM FOREST MODEL                  #
+#######################################################################
+#Prediction of individual point
+
+Predict.CrimeScore<-function(lat,long){
+  dat.test=data.frame(do.distance(lat,long))
+  return(predict(rf2,dat.test))
+}
+
+Predict.CrimeScore.Vec<-function(vec.in){
+  vec=strsplit(vec.in,',')[[1]]
+  out=''
+  for (i in 1:(length(vec)/2)){
+    cs=Predict.CrimeScore(as.numeric(vec[((i-1)+1)]),as.numeric(vec[2*i]))
+    #out=paste(out,c(vec[((i-1)+1)],vec[2*i],cs),sep=,)
+    out=paste(out,c(vec[((i-1)+1)]),sep=',')
+    if (i==1) out=as.character(vec[((i-1)+1)])
+    out=paste(out,c(vec[2*i]),sep=',')
+    out=paste(out,cs,sep=',')
+  }
+  return(out)
+}
+
+Predict.CrimeScore.JSON<-function(vec.in){
+  vec=strsplit(vec.in,',')[[1]]
+  out.list=list()
+  comb.list=list()
+  for (i in 1:(length(vec)/2)){
+    cs=Predict.CrimeScore(as.numeric(vec[((i-1)+1)]),as.numeric(vec[2*i]))
+    out.list=list(latitude=vec[((i-1)+1)], longitude=vec[2*i], crime.score=as.character(cs))
+    out.list.JSON=toJSON(out.list)
+    comb.list=c(comb.list,out.list.JSON)
+    if (i == 1) comb.list=out.list.JSON
+  }
+  total.list=list(places=comb.list)
+  return(toJSON(total.list))  
+}
+
+coord.lat=c(38.8325192140698,38.90398)
+coord.long=c(-76.9936390021642,-77.05510)
+coord=cbind(coord.lat,coord.long)
+Predict.CrimeScore(coord.lat,coord.long)
+
+#######################################################################
+# PART 5 CITY PLANNER ASSESSMENT #
+#######################################################################
+#Prediction of individual point
+coord.lat=c(38.8325192140698)
+coord.long=c(-76.9936390021642)
+coord=cbind(coord.lat,coord.long)
+dat.test=data.frame(do.distance(coord.lat,coord.long))
+predict(rf2,dat.test)
+
+City.Planner<-function(lat,long){
+  dat.test=data.frame(do.distance(coord.lat,coord.long))
+  Crime.Score=predict(rf2,dat.test)    
+  return(cbind(Crime.Score,dat.test))
+}
+City.Planner(coord.lat,coord.long)
+
+Sys.time()-start.time
+
 myPort <- 8000
 myInterface <- "0.0.0.0"
 status <- -1
@@ -197,8 +270,8 @@ if (status == 0) {
 			res$write(c('coords: ',coordinates,'\n'))
 			# res$write('crimescores: ')
 			# res$write('\n')
-			# res$write(Predict.CrimeScore.Vec(coordinates))
-			# res$write('\n')
+			res$write(Predict.CrimeScore.JSON(coordinates))
+			res$write('\n')
 			# res$write('crimescores as JSON: ')
 			# res$write('\n')
 			# res$write(toJSON(Predict.CrimeScore.Vec(coordinates)))
