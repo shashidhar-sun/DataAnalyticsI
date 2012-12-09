@@ -1,185 +1,155 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 500; padding: 0 }
-      #map_canvas { height: 100% }
-    </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&sensor=false">
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		html { height: 100% }
+		body { height: 100%; margin: 500; padding: 0 }
+		#map_canvas { height: 100% }
+	</style>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&sensor=false"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+	<script type="text/javascript">
+		var map;
+		var service;
+		var i;
+		var cs = []; // the array in which you will score crime scores.
+                        
+		function initialize() 
+		{
+			var mapOptions = {
+				center: new google.maps.LatLng(38.89555, -77.0362),
+				zoom: 11,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			
+			map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+
+			service = new google.maps.places.PlacesService(map);
+
+			google.maps.event.addListener(map, 'click', function(event) 
+			{
+				//call the backend for crime score at event.laLng and et the crime score
+				var crimescore = 50;
+				var a;
+				if (crimescore<10)
+					a = "0" + crimescore.toString();
+				else
+					a = crimescore.toString();
+				var b;
+				if ((100 - crimescore) < 10)
+					b = "0" + (100 - crimescore).toString();
+				else
+					b = (100 - crimescore).toString();
+				var marker = new google.maps.Marker({
+					position: event.latLng,
+					map: map,
+					icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
+				});
+			});
+		}
     </script>
-    
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
-    <script type="text/javascript">
-      var map;
-      var service;
-      var i;
-      var cs = []; // the array in which you will score crime scores.
-                              
-      function initialize() 
-      {
-      
-        
-        var mapOptions = {
-                            center: new google.maps.LatLng(38.89555,-77.0362),
-                            zoom: 11,
-                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                         };
-         map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
-         
-         
-         service = new google.maps.places.PlacesService(map);
-         
-         
-         google.maps.event.addListener(map, 'click', function(event) 
-         {
-             //call the backend for crime score at event.laLng and et the crime score
-              var crimescore = 50;
-              var a;
-             if(crimescore<10)
-             a = "0" + crimescore.toString();
-             else
-             a = crimescore.toString();
-             var b;
-             if((100-crimescore)<10)
-             b = "0" + (100-crimescore).toString();
-             else
-             b = (100-crimescore).toString();
-              var marker = new google.maps.Marker({
-                                                    position: event.latLng,
-                                                    map: map,
-                                                    icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
-                                                  });
-              
-                     
-         });
-      }
-
-    </script>
-  </head>
-  <body onload="initialize()">
-    <div style="text-align: left;"><span style="font-weight: bold;">Please enter the query in the
-          search box or click on a point to find
-          the crime score.&nbsp;<label></label></span></div>
-    <div style="text-align: right;"><input name="str" id="val"
-       value="search"></div>
-    <script>
-      
-    document.getElementById('val').onkeypress = function(e)
-    {
-    
-        if (!e) e = window.event;   
-        if (e.keyCode == '13')
-        {
-        
-        
-            var address = document.getElementById("val").value;
-            var geocoder = new google.maps.Geocoder();
-
-            var request = {
-               location: new google.maps.LatLng(38.89555,-77.0362),
-               keyword: address,
-               radius: 10000
-                          };
-            service.radarSearch(request, function (results, status)
-            {
-                 i = 0;
-                 //if you want to call back end in batches this is the right place
-                 for (var j = 0;j<results.length;j++)
-                 {
-                       cs[j] = j;
-                 
-                 }
-                              
-                 for(i = 0; i < results.length;i++)
-                 {
-                                
-                       var req = {reference: results[i].reference};
-                                
-                       if (i<9)
-                       {
-                                  
-                             service.getDetails(req, function(place, stat)
-                             {
-                                     if( typeof service.getDetails.i == 'undefined' )
-                                     {
-                                        service.getDetails.i = 0;
-                                     }
-                                     var a;
-                                     if(cs[service.getDetails.i]<10)
-                                     a = "0" + cs[service.getDetails.i].toString();
-                                     else
-                                     a = cs[service.getDetails.i].toString();
-                                     var b;
-                                     if((100-cs[service.getDetails.i])<10)
-                                     b = "0" + (100-cs[service.getDetails.i]).toString();
-                                     else
-                                     b = (100-cs[service.getDetails.i]).toString();
-                                    
-                                     service.getDetails.i++;
-                                     
-                                     
-                                      
-                                     if(stat == google.maps.places.PlacesServiceStatus.OK)
-                                     {
-                                      //Call back end for crime score at place.geometry.location
-                                     var beachMarker = new google.maps.Marker({
-                                        
-                                                                              position: place.geometry.location,
-                                                                              map: map,
-                                                                              icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
-                                                                             });
-                                      }
-                                  });
-                                      
-                                      
-                       }    
-                              
-                       else
-                       {
-                             var a;
-                             if(cs[i]<10)
-                             a = "0" + cs[i].toString();
-                             else
-                             a = cs[i].toString();
-                             var b;
-                             if((100-cs[i])<10)
-                             b = "0" + (100-cs[i]).toString();
-                             else
-                             b = (100-cs[i]).toString();
-                                
-                                
-                             var beachMarker = new google.maps.Marker({
-                                                                       position: results[i].geometry.location,
-                                                                       map: map,
-                                                                       icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
-                                                                      });
-                                
-                        }
-                              
-                                
-                                     
-                                      
-                                
-                                 
-                                
-                  }
-                             
-                              
-            });
-
-      
-       }
-  }
-
-  </script>
-    <p><br></br></p>
-    
-    
-
-    <div id="map_canvas" style="width:100%; height:100%"></div>
-
-  </body>
+	</head>
+	<body onload="initialize()">
+		<div style="text-align: left;">
+			<span style="font-weight: bold;">Please enter the query in the search box or click on a point to find the crime score.&nbsp;<label></label></span>
+		</div>
+	<div style="text-align: right;">
+		<input name="str" id="val" value="search">
+	</div>
+	<script>
+		
+		document.getElementById('val').onkeypress = function(e)
+		{
+			if (!e) e = window.event;   
+			if (e.keyCode == '13')
+			{
+				var address = document.getElementById("val").value;
+				var geocoder = new google.maps.Geocoder();
+				
+				var request = {
+					location: new google.maps.LatLng(38.89555, -77.0362),
+					keyword: address,
+					radius: 10000
+				};
+				
+				service.radarSearch(request, function(results, status)
+				{
+					i = 0;
+					
+					// if you want to call back end in batches this is the right place
+					for (var j = 0; j < results.length; j++)
+					{
+						cs[j] = j;
+					}
+					
+					for(i = 0; i < results.length; i++)
+					{
+						var req = {reference: results[i].reference};
+						if (i < 9)
+						{
+							service.getDetails(req, function(place, stat)
+							{
+								if (typeof service.getDetails.i == 'undefined')
+								{
+									service.getDetails.i = 0;
+								}
+								
+								var a;
+								if (cs[service.getDetails.i] < 10)
+									a = "0" + cs[service.getDetails.i].toString();
+								else
+									a = cs[service.getDetails.i].toString();
+								var b;
+								
+								if ((100 - cs[service.getDetails.i]) < 10)
+									b = "0" + (100 - cs[service.getDetails.i]).toString();
+								else
+									b = (100 - cs[service.getDetails.i]).toString();
+								
+								service.getDetails.i++;
+								
+								if (stat == google.maps.places.PlacesServiceStatus.OK)
+								{
+									
+									//Call back end for crime score at place.geometry.location
+									var beachMarker = new google.maps.Marker({
+										position: place.geometry.location,
+										map: map,
+										icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
+									});
+								}
+							});
+						}
+						
+						else
+						{
+							var a;
+							if (cs[i] < 10)
+								a = "0" + cs[i].toString();
+							else
+								a = cs[i].toString();
+							
+							var b;
+							if ((100 - cs[i]) < 10)
+								b = "0" + (100-cs[i]).toString();
+							else
+								b = (100 - cs[i]).toString();
+							
+							var beachMarker = new google.maps.Marker({
+								position: results[i].geometry.location,
+								map: map,
+								icon: 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/'
+							});
+						}
+					}
+				});
+			}
+		}
+	</script>
+	<p><br></br></p>
+	
+	<div id="map_canvas" style="width:100%; height:100%"></div>
+	
+	</body>
 </html>
