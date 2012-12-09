@@ -265,6 +265,7 @@ if (status == 0) {
 		app = function(env) {
 			req <- Request$new(env)
 			res <- Response$new()
+			res$header('Content-type', 'application/json')
 			res$write('<pre>')
 			coordinates <- toString(req$params()["coords"])
 			res$write(c('coords: ',coordinates,'\n'))
