@@ -5,30 +5,42 @@ library(Rook)
 myPort <- 8000
 myInterface <- "0.0.0.0"
 status <- -1
-
-# R 2.15.1 uses .Internal, but the next release of R will use a .Call.
-# Either way it starts the web server.
-if (as.integer(R.version[["svn rev"]]) > 59600) {
-    status <- .Call(tools:::startHTTPD, myInterface, myPort)
-} else {
-    status <- .Internal(startHTTPD(myInterface, myPort))
-}
+status <- .Internal(startHTTPD(myInterface, myPort))
 
 if (status == 0) {
-    unlockBinding("httpdPort", environment(tools:::startDynamicHelp))
-    assign("httpdPort", myPort, environment(tools:::startDynamicHelp))
-
-    s <- Rhttpd$new()
-    s$listenAddr <- myInterface
-    s$listenPort <- myPort
-
-    # Change this line to your own application. You can add more than one
-    # application if you like
-    s$add(name = "test", app = system.file("exampleApps/RookTestApp.R", package = "Rook"))
-
-    # Now make the console go to sleep. Of course the web server will still be
-    # running.
-    while (TRUE) Sys.sleep(24 * 60 * 60)
+	unlockBinding("httpdPort", environment(tools:::startDynamicHelp))
+	assign("httpdPort", myPort, environment(tools:::startDynamicHelp))
+	
+	s <- Rhttpd$new()
+	s$listenAddr <- myInterface
+	s$listenPort <- myPort
+	
+	# Change this line to your own application. You can add more than one
+	# application if you like
+	s$add(name = "test", app = system.file("exampleApps/RookTestApp.R", package = "Rook"))
+	
+	s$add(name="crimescores",
+		app = function(env) {
+			req <- Request$new(env)
+			res <- Response$new()
+			res$write('<pre>')
+			coordinates <- toString(req$params()["coords"])
+			res$write(c('coords: ',coordinates,'\n'))
+			# res$write('crimescores: ')
+			# res$write('\n')
+			# res$write(Predict.CrimeScore.Vec(coordinates))
+			# res$write('\n')
+			# res$write('crimescores as JSON: ')
+			# res$write('\n')
+			# res$write(toJSON(Predict.CrimeScore.Vec(coordinates)))
+			res$write('</pre>')
+			res$finish()
+		}
+	)
+	
+	# Now make the console go to sleep. Of course the web server will still be
+	# running.
+	while (TRUE) Sys.sleep(24 * 60 * 60)
 }
 
 # If we get here then the web server didn't start up properly
