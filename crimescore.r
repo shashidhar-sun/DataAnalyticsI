@@ -209,12 +209,12 @@ Predict.CrimeScore.JSON<-function(vec.in){
   vec=strsplit(vec.in,',')[[1]]
   out.list=list()
   comb.list=list()
+
   for (i in 1:(length(vec)/2)){
     cs=Predict.CrimeScore(as.numeric(vec[((i-1)+1)]),as.numeric(vec[2*i]))
-    out.list=list(latitude=vec[((i-1)+1)], longitude=vec[2*i], crime.score=as.character(cs))
-    out.list.JSON=toJSON(out.list)
-    comb.list=c(comb.list,out.list.JSON)
-    if (i == 1) comb.list=out.list.JSON
+    out.list=list(latitude=vec[((i-1)+1)], longitude=vec[2*i], crimescore=as.character(cs))
+    comb.list=c(comb.list,out.list)
+    if (i == 1) comb.list=out.list
   }
   total.list=list(places=comb.list)
   return(toJSON(total.list))  
