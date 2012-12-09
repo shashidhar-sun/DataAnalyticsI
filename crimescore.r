@@ -267,7 +267,7 @@ if (status == 0) {
 			res <- Response$new()
 			res$header('Content-type', 'application/json')
 			# res$write('<pre>')
-			# coordinates <- toString(req$params()["coords"])
+			coordinates <- toString(req$params()["coords"])
 			# res$write(c('coords: ',coordinates,'\n'))
 			# res$write('crimescores: ')
 			# res$write('\n')
