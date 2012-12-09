@@ -28,10 +28,10 @@
 		var i;
 		var cs = []; // the array in which you will score crime scores.
 		var mar = new Array();
-                var loc = new Array();
-                var ic = new Array();
+                var loc;
+                var ic;
                 var infowindow = new Array();
-                var marker = new Array();
+                var marker;
                         
 		function initialize() 
 		{
@@ -85,6 +85,20 @@
 			if (!e) e = window.event;   
 			if (e.keyCode == '13')
 			{
+                                //alert((marker[0].position).toString());
+                                if (marker)
+                                {
+                                  for (m in marker) {
+                                  marker[m].setMap(null);
+                                  //alert("marker error");
+                                 }
+                                 marker.length = 0;
+                                 loc.length = 0;
+                                 ic.length = 0;
+                                }
+                                marker = new Array();
+                                loc = new Array();
+                                ic = new Array();
 				var address = document.getElementById("val").value;
 				var geocoder = new google.maps.Geocoder();
 				
@@ -132,7 +146,7 @@
 								
 								if (stat == google.maps.places.PlacesServiceStatus.OK)
 								{
-									loc.push(place.geometry.location);
+									loc[service.getDetails.i - 1] = place.geometry.location;
 									ic[service.getDetails.i - 1] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
 								}
 							});
@@ -152,7 +166,7 @@
 							else
 								b = (100 - cs[i]).toString();
 							
-							loc.push(results[i].geometry.location);
+							loc[i] = results[i].geometry.location;
                       
                                                         ic[i] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
 						}
@@ -184,6 +198,7 @@
 				});
 			}
 		}
+            
 	</script>
 	<p><br></br></p>
 	
