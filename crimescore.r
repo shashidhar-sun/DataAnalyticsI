@@ -1,9 +1,13 @@
-#/usr/bin/env Rscript
+#!/usr/bin/env Rscript
+
+library(Rook)
 
 myPort <- 8000
 myInterface <- "0.0.0.0"
 status <- -1
 
+# R 2.15.1 uses .Internal, but the next release of R will use a .Call.
+# Either way it starts the web server.
 if (as.integer(R.version[["svn rev"]]) > 59600) {
     status <- .Call(tools:::startHTTPD, myInterface, myPort)
 } else {
