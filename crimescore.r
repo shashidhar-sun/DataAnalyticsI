@@ -205,20 +205,19 @@ library(Rook)
 #   return(out)
 # }
 # 
-# Predict.CrimeScore.JSON<-function(vec.in){
-#   vec=strsplit(vec.in,',')[[1]]
-#   out.list=list()
-#   comb.list=list()
-# 
-#   for (i in 1:(length(vec)/2)){
-#     cs=Predict.CrimeScore(as.numeric(vec[((i*2)-1)]),as.numeric(vec[i*2]))
-#     out.list=list(latitude=vec[((i*2)-1)], longitude=vec[i*2], crimescore=as.character(cs))
-#     comb.list=c(comb.list,out.list)
-#     if (i == 1) comb.list=out.list
-#   }
-#   total.list=list(places=comb.list)
-#   return(toJSON(total.list))  
-# }
+Predict.CrimeScore.JSON<-function(vec.in){
+	vec <- strsplit(vec.in,',')[[1]]
+	out.list <- list()
+
+	for (i in 1:(length(vec)/2)){
+		cs = i
+		# cs=Predict.CrimeScore(as.numeric(vec[((i*2)-1)]),as.numeric(vec[i*2]))
+		out.list[[i]] <- list(latitude=vec[((i*2)-1)], longitude=vec[i*2], crimescore=as.character(cs))
+	}
+	total.list=list(places=out.list)
+	print(toJSON(total.list))
+	return(toJSON(total.list))
+}
 # 
 # coord.lat=c(38.8325192140698,38.90398)
 # coord.long=c(-76.9936390021642,-77.05510)
