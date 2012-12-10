@@ -133,14 +133,15 @@
 						 		
                                                                 
 						 		var url = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
-                                                                alert(csPlaces[id].latitude);
-                                                                var latlng =new LatLng(csPlaces[id].latitude,csPlaces[id].longitude);
-						 	        var marker = new google.maps.Marker({
+                                                                
+                                                                var latlng = new google.maps.LatLng(csPlaces[id].latitude,csPlaces[id].longitude,false);
+                                                                
+                                                                marker[i] = new google.maps.Marker({
                                                                                                     position: latlng ,
                                                                                                     map: map,
                                                                                                     icon: url
                                                                                                     });
-                                                                alert("Hello");
+                                                                
 						 
 						// 
 						// for (j = 0; j < loc.length; j++)
