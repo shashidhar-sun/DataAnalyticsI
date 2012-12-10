@@ -22,6 +22,8 @@
 		var ic;
 		var infowindow = new Array();
 		var marker = new Array();
+		var init = 0;
+
 
 
 		var csPlace = function(lat, lng) {
@@ -29,6 +31,8 @@
 			this.longitude = lng;
 			this.crimescore = -1;
 		}
+
+
 
 
 		// Main startup routine
@@ -41,17 +45,25 @@
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 
+			init ++;
+
 
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 
+
+
 			service = new google.maps.places.PlacesService(map);
+
+
 
 
 			google.maps.event.addListener(map, 'click', function(event) 
 			{
 				// Call the backend for crime score at event.laLng and et the crime score
 				var crimescore = 50;
+
+
 
 
 				var a;
@@ -61,11 +73,15 @@
 					a = crimescore.toString();
 
 
+
+
 				var b;
 				if ((100 - crimescore) < 10)
 					b = "0" + (100 - crimescore).toString();
 				else
 					b = (100 - crimescore).toString();
+
+
 
 
 				var marker = new google.maps.Marker({
@@ -77,6 +93,8 @@
 		}
 
 
+
+
 		// Get CrimeScores for an array of lat/lng coordinates
 		var getCrimeScores = function(array) {
 			coordinates = "coords=" + array.join(",");
@@ -86,38 +104,49 @@
 		}
 
 
+
+
 		// Get CrimeScore for a single lat/lng
 		var getCrimeScore = function(lat, lng) {
 			getCrimeScores([lat,lng]);
 		}
 
 
+
+
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-			
+
+
 			// Iterate over returned CrimeScores
 			for (var i = 0; i < data.places.length ; i++) {
 				// Store lat/lng
 				var lat = parseFloat(data.places[i].latitude);
 				var lng = parseFloat(data.places[i].longitude);
-				
+
+
 				// Get the id for this lat/lng
 				var id = identifierForLatLng(lat, lng);
-				
+
+
 				// If there wasn't already an entry for this ID, make one
 				if (csPlaces[id] === undefined)
 					csPlaces[id] = new csPlace(lat, lng);
-				
+
+
 				// Local pointer to csPlaces entry
 				var place = csPlaces[id];
-				
+
+
 				// Add CrimeScore to structure
 				place.crimescore = parseFloat(data.places[i].crimescore);
-				
+
+
 				// Color interpolator
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
 				var scaledCrimeScore = place.crimescore / 100;
-				
+
+
 				var url = 'http://www.googlemapsmarkers.com/v1/' + greenRedInterpolator(scaledCrimeScore).substring(1) +'/';
 				var latLng = new google.maps.LatLng(place.latitude, place.longitude);
 				place.marker = new google.maps.Marker({
@@ -125,14 +154,18 @@
 					map: map,
 					icon: url
 				});
-				
+
+
 				place.infoWindow = new google.maps.InfoWindow({content: "Test content."});
-				
+
+
 				google.maps.event.addListener(place.marker, 'click', function() {
 					place.infoWindow.open(map, place.marker);
 				});
 			}
 		};
+
+
 
 
 		// Generate a system-wide identifier for a lat/lng
@@ -147,16 +180,20 @@
 		}
 
 
+
+
 		// Add listener to search box
 		var addSearchBoxListener = function() {
 			document.getElementById('val').onkeypress = function(e)
 			{
 				if (!e) e = window.event;   
 				if (e.keyCode == '13') {
-					
+					if (init > 1)
+					initialize();
 					// Value of text box
 					var address = document.getElementById("val").value;
-					
+
+
 					var request = {
 						// Hardcode location to center of Washington, D.C.
 						location: new google.maps.LatLng(38.89555, -77.0362),
@@ -165,6 +202,8 @@
 						// Radius of 10km
 						radius: 10000
 					};
+					init++;
+
 
 
 					// Send request to service
@@ -173,10 +212,14 @@
 						var i = 0;
 
 
+
+
 						// Iterate over search results
 						for (var j = 0; j < results.length; j++)
 						{
 							// cs[j] = j;
+
+
 
 
 							// Get latitude/longitude
@@ -184,12 +227,18 @@
 							var lng = results[j].geometry.location.lng();
 
 
+
+
 							// Generate an identifier based on coordinates
 							var id = identifierForLatLng(lat, lng);
 
 
+
+
 							// Create a new csPlace with coordinates and identifier
 							csPlaces[id] = new csPlace(lat, lng);
+
+
 
 
 							// Fire off a request for a CrimeScore for each coordinate
@@ -197,10 +246,13 @@
 						}
 
 
+
+
 					});
 				}
 			}
 		};
+
 
 		// Testing code
 		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
@@ -219,7 +271,11 @@
 	<p><br></br></p>
 
 
+
+
 	<div id="map_canvas" style="width:100%; height:100%"></div>
+
+
 
 
 	</body>
