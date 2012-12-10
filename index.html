@@ -27,6 +27,8 @@
 			this.latitude = lat;
 			this.longitude = lng;
 			this.crimescore = -1;
+			this.infoWindow = false;
+			this.marker = false;
 		}
 
 
@@ -39,14 +41,11 @@
 				zoom: 11,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-
-
+			
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
-
+			
 			service = new google.maps.places.PlacesService(map);
-
-
+			
 			google.maps.event.addListener(map, 'click', function(event) 
 			{
 				// Call the backend for crime score at event.laLng and et the crime score
@@ -93,8 +92,7 @@
 
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-
-
+			
 			// Iterate over returned CrimeScores
 			for (var i = 0; i < data.places.length ; i++) {
 				// Store lat/lng
@@ -108,40 +106,29 @@
 				if (csPlaces[id] === undefined)
 					csPlaces[id] = new csPlace(lat, lng);
 				
+				// Local pointer to csPlaces entry
+				var place = csPlaces[id];
+				
 				// Add CrimeScore to structure
-				csPlaces[id].crimescore = parseFloat(data.places[i].crimescore);
+				place.crimescore = parseFloat(data.places[i].crimescore);
 				
 				// Color interpolator
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
-				var scaledCrimeScore = csPlaces[id].crimescore / 100;
+				var scaledCrimeScore = place.crimescore / 100;
 				
 				var url = 'http://www.googlemapsmarkers.com/v1/' + greenRedInterpolator(scaledCrimeScore).substring(1) +'/';
-				var latlng = new google.maps.LatLng(csPlaces[id].latitude,csPlaces[id].longitude);
-				var marker = new google.maps.Marker({
-					position: latlng ,
+				var latLng = new google.maps.LatLng(place.latitude, place.longitude);
+				place.marker = new google.maps.Marker({
+					position: latLng,
 					map: map,
 					icon: url
 				});
-						 
-						// 
-						// for (j = 0; j < loc.length; j++)
-						// {
-						// 	//alert(j);
-						
-						// 	
-						// 	infowindow[j] = new google.maps.InfoWindow();
-						// 	//alert(ic[j]);
-						// 	infowindow[j].setContent(cs[j].toString());
-						// 	//infowindow[j].open(map, marker[j]);
-						// 	google.maps.event.addListener(marker[j], 'click', (function(marker,j)
-						// 	{
-						// 		return function()
-						// 		{
-						// 			// alert(j);
-						// 			infowindow[j].open(map, marker);
-						// 		}  
-						// 	}(marker[j],j)));
-						// }
+				
+				place.infoWindow = new google.maps.InfoWindow({content: "Test content."});
+				
+				google.maps.event.addListener(place.marker, 'click', function() {
+					place.infoWindow.open(map, place.marker);
+				});
 			}
 		};
 
