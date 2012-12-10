@@ -141,7 +141,6 @@
 		var infowindow = new Array();
 		var marker = new Array();
 
-
 		var csPlace = function(lat, lng) {
 			this.latitude = lat;
 			this.longitude = lng;
@@ -149,7 +148,6 @@
 			this.reference = -1;
 			this.details = -1;
 		}
-
 
 		// Main startup routine
 		var initialize = function() 
@@ -167,8 +165,7 @@
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 			service = new google.maps.places.PlacesService(map);
 		}
-
-
+		
 		// Get CrimeScores for an array of lat/lng coordinates
 		var getCrimeScores = function(array) {
 			coordinates = "coords=" + array.join(",");
@@ -176,40 +173,53 @@
 			data = coordinates + callback;
 			$.getJSON("http://www.crimescore.us:8000/custom/crimescores", data);
 		}
-
-
+		
 		// Get CrimeScore for a single lat/lng
 		var getCrimeScore = function(lat, lng) {
 			getCrimeScores([lat,lng]);
 		}
-
-
+		
+		var removeMarkers = function() {
+			for (var elem in csPlaces) {
+				if (csPlaces[elem].marker) {
+					csPlaces[elem].marker.setMap(null);
+				}
+			}
+		};
+		
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-			
+
+
 			// Iterate over returned CrimeScores
 			for (var i = 0; i < data.places.length ; i++) {
 				// Store lat/lng
 				var lat = parseFloat(data.places[i].latitude);
 				var lng = parseFloat(data.places[i].longitude);
-				
+
+
 				// Get the id for this lat/lng
 				var id = identifierForLatLng(lat, lng);
-				
+
+
 				// If there wasn't already an entry for this ID, make one
 				if (csPlaces[id] === undefined)
 					csPlaces[id] = new csPlace(lat, lng);
-				
+
+
 				// Local pointer to csPlaces entry
 				var place = csPlaces[id];
-				
+
+
 				// Add CrimeScore to structure
 				place.crimescore = parseFloat(data.places[i].crimescore);
-				
+
+
 				// Color interpolator
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
 				var scaledCrimeScore = place.crimescore / 100;
-				
+
+
 				var url = 'http://www.googlemapsmarkers.com/v1/' + greenRedInterpolator(scaledCrimeScore).substring(1) +'/';
 				var latLng = new google.maps.LatLng(place.latitude, place.longitude);
 				place.marker = new google.maps.Marker({
@@ -220,9 +230,13 @@
 				
 				var html = ""
 				
-				if (place.details) {
-					if (place.details.name)
+				if (place.details != -1) {
+					// console.log('details');
+					console.log(place);
+					if (place.details.name) {
+						// console.log('name');
 						html += "<div class='placeInfo-name'>" + place.details.name + "</div>";
+					}
 					html += "<div class='placeInfo-crimescore'><span class='placeInfo-crimescore-logo'>CrimeScore</span>" + Math.round(place.crimescore) + "</div>";
 				} else
 					html += "<div class='placeInfo-crimescore'><span class='placeInfo-crimescore-logo'>CrimeScore</span>" + Math.round(place.crimescore) + "</div>";
@@ -240,12 +254,13 @@
 				// 	html += "<div class='placeInfo-website'><a href='" + place.details.website + "'>Website</a></div>";
 				
 				place.infoWindow = new google.maps.InfoWindow({content: html});
-				
 				google.maps.event.addListener(place.marker, 'click', function() {
 					place.infoWindow.open(map, place.marker);
 				});
 			}
 		};
+
+
 
 
 		// Generate a system-wide identifier for a lat/lng
@@ -258,6 +273,8 @@
 			longitude = longitude.replace(/\./g, "");
 			return latitude + longitude + "";
 		}
+
+
 
 
 		// Add listener to search box
@@ -278,8 +295,7 @@
 						// Radius of 10km
 						radius: 10000
 					};
-
-
+					
 					// Send request to service
 					service.radarSearch(request, function(results, status)
 					{
@@ -290,37 +306,32 @@
 						// Iterate over search results
 						for (var j = 0; j < limit; j++)
 						{
-							// cs[j] = j;
-
-
-							// Get latitude/longitude
-							var lat = results[j].geometry.location.lat();
-							var lng = results[j].geometry.location.lng();
-
-
-							// Generate an identifier based on coordinates
-							var id = identifierForLatLng(lat, lng);
-
-
-							// Create a new csPlace with coordinates and identifier
-							csPlaces[id] = new csPlace(lat, lng);
-							csPlaces[id].reference = results[j].reference;
-
-
-							// Fire off a request for a CrimeScore for each coordinate
-							getCrimeScore(lat, lng);
 							
-							// Get details for place
-							var placesService = new google.maps.places.PlacesService(map);
-							// var placeDetailRequest = {reference: }
-							service.getDetails({reference: csPlaces[id].reference}, function(place, status) {
-								csPlaces[id].details = place;
-							});
+							if (results[j] && results[j].geometry !== null) {
+								// Get details for place
+								service.getDetails({reference: results[j].reference}, processPlaceDetailSearchResult);
+							}
 						}
 					});
 				}
 			}
 		};
+		
+		var processPlaceDetailSearchResult = function(place, status) {
+			// Get latitude/longitude
+			var lat = place.geometry.location.lat();
+			var lng = place.geometry.location.lng();
+			var id = identifierForLatLng(lat, lng);
+		
+			// Create a new csPlace with coordinates and identifier
+			csPlaces[id] = new csPlace(lat, lng);
+			// csPlaces[id].reference = results[j].reference;
+			csPlaces[id].details = place;
+		
+			// Fire off a request for a CrimeScore for each coordinate
+			getCrimeScore(lat, lng);
+		};
+
 
 		// Testing code
 		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
@@ -338,12 +349,12 @@
 			-->
 		</div>
 		<div id="header-back"></div>
-		<div id="search">Search for anything: <input id="val"></div>
-	<p><br></br></p>
-
-
-	<div id="map_canvas"></div>
-
-
+		<div id="search">
+			Search for anything <input id="val"><br />
+			or choose a mode: <a href="#">Plan</a> | <a href="#">Explore</a></h2>
+		</div>
+		<div id="planner"></div>
+		<div id="explorer"></div>
+		<div id="map_canvas"></div>
 	</body>
 </html>
