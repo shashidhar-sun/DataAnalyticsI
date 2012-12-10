@@ -8,7 +8,8 @@
 		body { height: 100%; margin: 500; padding: 0 }
 		#map_canvas { height: 100% }
 	</style>
-	<script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+	<script src="javascript/d3.v2.min.js" type="text/javascript"></script>
+	<script src="javascript/jquery-1.8.3.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAK-Z0hFMYhpn0Dztr0lU1WhMvwViPPrwc&libraries=places&sensor=false"></script>
 	<script type="text/javascript">
 		// Global variables and data structures
@@ -151,34 +152,11 @@
 			document.getElementById('val').onkeypress = function(e)
 			{
 				if (!e) e = window.event;   
-				if (e.keyCode == '13')
-				{
-
-
-					// // Shashi's code
-					// //alert((marker[0].position).toString());
-					// if (marker)
-					// {
-					// 	for (m in marker) {
-					// 		marker[m].setMap(null);
-					// 		//alert("marker error");
-					// 	}
-					// 	marker.length = 0;
-					// 	loc.length = 0;
-					// 	ic.length = 0;
-					// }
-					// marker = new Array();
-					// loc = new Array();
-					// ic = new Array();
-
-
+				if (e.keyCode == '13') {
+					
 					// Value of text box
 					var address = document.getElementById("val").value;
-
-
-					// var geocoder = new google.maps.Geocoder();
-
-
+					
 					var request = {
 						// Hardcode location to center of Washington, D.C.
 						location: new google.maps.LatLng(38.89555, -77.0362),
@@ -223,30 +201,6 @@
 				}
 			}
 		};
-                
-               // for(j in marker)
-                //{
-                                                       
-                //}
-                
-                  var j =0;
-                  function infowind()
-                  {
-                  for(var id in csPlaces)
-                  {
-                
-                                                       google.maps.event.addListener(marker[j], 'click', (function(marker,j)
-						 	{
-						 		return function()
-						 		{
-						 			 alert(j);
-						 			infowindow[j].open(map, marker);
-						 		}  
-						 	}(marker[j],j)));
-                                                      j++; 
-                  }
-                  }
-
 
 		// Testing code
 		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
