@@ -20,13 +20,15 @@
 		var ic;
 		var infowindow = new Array();
 		var marker;
-		
+
+
 		var csPlace = function(lat, lng) {
 			this.latitude = lat;
 			this.longitude = lng;
 			this.crimescore = -1;
 		}
-		
+
+
 		// Main startup routine
 		var initialize = function() 
 		{
@@ -36,28 +38,34 @@
 				zoom: 11,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-			
+
+
 			map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
+
 			service = new google.maps.places.PlacesService(map);
+
 
 			google.maps.event.addListener(map, 'click', function(event) 
 			{
 				// Call the backend for crime score at event.laLng and et the crime score
 				var crimescore = 50;
-				
+
+
 				var a;
 				if (crimescore < 10)
 					a = "0" + crimescore.toString();
 				else
 					a = crimescore.toString();
-				
+
+
 				var b;
 				if ((100 - crimescore) < 10)
 					b = "0" + (100 - crimescore).toString();
 				else
 					b = (100 - crimescore).toString();
-					
+
+
 				var marker = new google.maps.Marker({
 					position: event.latLng,
 					map: map,
@@ -65,7 +73,8 @@
 				});
 			});
 		}
-		
+
+
 		// Get CrimeScores for an array of lat/lng coordinates
 		var getCrimeScores = function(array) {
 			coordinates = "coords=" + array.join(",");
@@ -73,34 +82,89 @@
 			data = coordinates + callback;
 			$.getJSON("http://www.crimescore.us:8000/custom/crimescores", data);
 		}
-		
+
+
 		// Get CrimeScore for a single lat/lng
 		var getCrimeScore = function(lat, lng) {
 			getCrimeScores([lat,lng]);
 		}
-		
+
+
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-			
+
+
 			// Iterate over returned CrimeScores
-			for (var i = 0; i < data.places.length; i++) {
+			for (var i = 0; i < data.places.length ; i++) {
 				// Store lat/lng
 				var lat = parseFloat(data.places[i].latitude);
 				var lng = parseFloat(data.places[i].longitude);
-				
+
+
 				// Get the id for this lat/lng
 				var id = identifierForLatLng(lat, lng);
-				
+
+
 				// If there wasn't already an entry for this ID, make one
 				if (csPlaces[id] === undefined)
 					csPlaces[id] = new csPlace(lat, lng);
-				
+
+
 				// Add CrimeScore to structure
 				csPlaces[id].crimescore = parseFloat(data.places[i].crimescore);
 				console.log(csPlaces[id]);
+                                
+                                
+						 // Shashi's code
+						
+						 	
+						 		var a;
+                                                                var t = Math.floor(csPlaces[id].crimescore);
+						 		if ( t< 10)
+						 			a = "0" + t.toString();
+						 		else
+						 			a = t.toString();
+						 		
+						 		var b;
+						 		if ((100 - t) < 10)
+						 			b = "0" + (100-t).toString();
+						 		else
+						 			b = (100 - t).toString();
+						 		
+                                                                
+						 		var url = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
+                                                                alert(csPlaces[id].latitude);
+                                                                var latlng =new LatLng(csPlaces[id].latitude,csPlaces[id].longitude);
+						 	        var marker = new google.maps.Marker({
+                                                                                                    position: lstlng ,
+                                                                                                    map: map,
+                                                                                                    icon: url
+                                                                                                    });
+                                                                alert("Hello");
+						 
+						// 
+						// for (j = 0; j < loc.length; j++)
+						// {
+						// 	//alert(j);
+						
+						// 	
+						// 	infowindow[j] = new google.maps.InfoWindow();
+						// 	//alert(ic[j]);
+						// 	infowindow[j].setContent(cs[j].toString());
+						// 	//infowindow[j].open(map, marker[j]);
+						// 	google.maps.event.addListener(marker[j], 'click', (function(marker,j)
+						// 	{
+						// 		return function()
+						// 		{
+						// 			// alert(j);
+						// 			infowindow[j].open(map, marker);
+						// 		}  
+						// 	}(marker[j],j)));
+						// }
 			}
 		};
-		
+
+
 		// Generate a system-wide identifier for a lat/lng
 		var identifierForLatLng = function(latitude, longitude) {
 			latitude = latitude.toString();
@@ -111,7 +175,8 @@
 			longitude = longitude.replace(/\./g, "");
 			return latitude + longitude + "";
 		}
-		
+
+
 		// Add listener to search box
 		var addSearchBoxListener = function() {
 			document.getElementById('val').onkeypress = function(e)
@@ -119,7 +184,8 @@
 				if (!e) e = window.event;   
 				if (e.keyCode == '13')
 				{
-					
+
+
 					// // Shashi's code
 					// //alert((marker[0].position).toString());
 					// if (marker)
@@ -135,12 +201,15 @@
 					// marker = new Array();
 					// loc = new Array();
 					// ic = new Array();
-					
+
+
 					// Value of text box
 					var address = document.getElementById("val").value;
-					
+
+
 					// var geocoder = new google.maps.Geocoder();
-					
+
+
 					var request = {
 						// Hardcode location to center of Washington, D.C.
 						location: new google.maps.LatLng(38.89555, -77.0362),
@@ -149,113 +218,46 @@
 						// Radius of 10km
 						radius: 10000
 					};
-				
+
+
 					// Send request to service
 					service.radarSearch(request, function(results, status)
 					{
 						var i = 0;
-						
+
+
 						// Iterate over search results
 						for (var j = 0; j < results.length; j++)
 						{
 							// cs[j] = j;
-						
+
+
 							// Get latitude/longitude
 							var lat = results[j].geometry.location.lat();
 							var lng = results[j].geometry.location.lng();
-						
+
+
 							// Generate an identifier based on coordinates
 							var id = identifierForLatLng(lat, lng);
-						
+
+
 							// Create a new csPlace with coordinates and identifier
 							csPlaces[id] = new csPlace(lat, lng);
-						
+
+
 							// Fire off a request for a CrimeScore for each coordinate
 							getCrimeScore(lat, lng);
 						}
-						
-						// // Shashi's code
-						// for(i = 0; i < results.length; i++)
-						// {
-						// 	var req = {reference: results[i].reference};
-						// 	if (i < 9)
-						// 	{
-						// 		service.getDetails(req, function(place, stat)
-						// 		{
-						// 			if (typeof service.getDetails.i == 'undefined')
-						// 			{
-						// 				service.getDetails.i = 0;
-						// 			}
-						// 			
-						// 			var a;
-						// 			if (cs[service.getDetails.i] < 10)
-						// 				a = "0" + cs[service.getDetails.i].toString();
-						// 			else
-						// 				a = cs[service.getDetails.i].toString();
-						// 			
-						// 			var b;
-						// 			if ((100 - cs[service.getDetails.i]) < 10)
-						// 				b = "0" + (100 - cs[service.getDetails.i]).toString();
-						// 			else
-						// 				b = (100 - cs[service.getDetails.i]).toString();
-						// 			
-						// 			service.getDetails.i++;
-						// 			
-						// 			if (stat == google.maps.places.PlacesServiceStatus.OK)
-						// 			{
-						// 				//Call back end for crime score at place.geometry.location
-						// 				loc[service.getDetails.i - 1] = place.geometry.location;
-						// 				ic[service.getDetails.i - 1] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
-						// 			}
-						// 		});
-						// 	}
-						// 	else
-						// 	{
-						// 		var a;
-						// 		if (cs[i] < 10)
-						// 			a = "0" + cs[i].toString();
-						// 		else
-						// 			a = cs[i].toString();
-						// 		
-						// 		var b;
-						// 		if ((100 - cs[i]) < 10)
-						// 			b = "0" + (100-cs[i]).toString();
-						// 		else
-						// 			b = (100 - cs[i]).toString();
-						// 		
-						// 		loc.push(results[i].geometry.location);
-						// 		ic[i] = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
-						// 	}
-						// }
-						// 
-						// for (j = 0; j < loc.length; j++)
-						// {
-						// 	//alert(j);
-						// 	marker[j] = new google.maps.Marker({
-						// 		position: loc[j],
-						// 		map: map,
-						// 		icon: ic[j]
-						// 	});
-						// 	
-						// 	infowindow[j] = new google.maps.InfoWindow();
-						// 	//alert(ic[j]);
-						// 	infowindow[j].setContent(cs[j].toString());
-						// 	//infowindow[j].open(map, marker[j]);
-						// 	google.maps.event.addListener(marker[j], 'click', (function(marker,j)
-						// 	{
-						// 		return function()
-						// 		{
-						// 			// alert(j);
-						// 			infowindow[j].open(map, marker);
-						// 		}  
-						// 	}(marker[j],j)));
-						// }
+
+
 					});
 				}
 			}
 		};
-		
-		
+
+
+
+
 		// Testing code
 		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
 		// getCrimeScores(testArray);
@@ -269,8 +271,10 @@
 		<input name="str" id="val" value="search">
 	</div>
 	<p><br></br></p>
-	
+
+
 	<div id="map_canvas" style="width:100%; height:100%"></div>
-	
+
+
 	</body>
 </html>
