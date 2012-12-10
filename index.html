@@ -19,7 +19,7 @@
 		var loc;
 		var ic;
 		var infowindow = new Array();
-		var marker;
+		var marker = new Array();
 
 
 		var csPlace = function(lat, lng) {
@@ -116,10 +116,8 @@
                                 
                                 
 						 // Shashi's code
-						
-						 	
-						 		var a;
-                                                                var t = Math.floor(csPlaces[id].crimescore);
+						    var a;
+                                                                var t = Math.ceil(csPlaces[id].crimescore);
 						 		if ( t< 10)
 						 			a = "0" + t.toString();
 						 		else
@@ -136,11 +134,19 @@
                                                                 
                                                                 var latlng = new google.maps.LatLng(csPlaces[id].latitude,csPlaces[id].longitude,false);
                                                                 
-                                                                marker[i] = new google.maps.Marker({
+                                                                marker[j] = new google.maps.Marker({
                                                                                                     position: latlng ,
                                                                                                     map: map,
                                                                                                     icon: url
                                                                                                     });
+                                                                 	infowindow[j] = new google.maps.InfoWindow();
+						 	//alert(ic[j]);
+						 	infowindow[j].setContent(csPlaces[id].crimescore.toString());
+						 	//infowindow[j].open(map, marker[j]);
+						 	
+						 		
+                                                        
+						 
                                                                 
 						 
 						// 
@@ -149,20 +155,9 @@
 						// 	//alert(j);
 						
 						// 	
-						// 	infowindow[j] = new google.maps.InfoWindow();
-						// 	//alert(ic[j]);
-						// 	infowindow[j].setContent(cs[j].toString());
-						// 	//infowindow[j].open(map, marker[j]);
-						// 	google.maps.event.addListener(marker[j], 'click', (function(marker,j)
-						// 	{
-						// 		return function()
-						// 		{
-						// 			// alert(j);
-						// 			infowindow[j].open(map, marker);
-						// 		}  
-						// 	}(marker[j],j)));
-						// }
+						
 			}
+                        infowind();
 		};
 
 
@@ -255,8 +250,29 @@
 				}
 			}
 		};
-
-
+                
+               // for(j in marker)
+                //{
+                                                       
+                //}
+                
+                  var j =0;
+                  function infowind()
+                  {
+                  for(var id in csPlaces)
+                  {
+                
+                                                       google.maps.event.addListener(marker[j], 'click', (function(marker,j)
+						 	{
+						 		return function()
+						 		{
+						 			 alert(j);
+						 			infowindow[j].open(map, marker);
+						 		}  
+						 	}(marker[j],j)));
+                                                      j++; 
+                  }
+                  }
 
 
 		// Testing code
