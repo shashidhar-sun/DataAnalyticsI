@@ -2,6 +2,7 @@
 <html>
 	<head>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="http://meyerweb.com/eric/tools/css/reset/reset.css"></link>
 	<style type="text/css">
 		html { height: 100% }
 		body { height: 100%; margin: 500; padding: 0 }
@@ -222,11 +223,13 @@
     </script>
 	</head>
 	<body onload="initialize()">
-		<div style="text-align: left;">
+		<div id="header">
+			<h1>CrimeScore</h1>
+			<div id="modeSelect">
+				<h2>Choose a mode: <a href="#">Plan</a> | <a href="#">Explore</a></h2>
+			</div>
 			<span style="font-weight: bold;">Please enter the query in the search box or click on a point to find the crime score.&nbsp;<label></label></span>
-		</div>
-	<div style="text-align: right;">
-		<input name="str" id="val" value="search">
+			<input name="str" id="val" value="search">
 	</div>
 	<p><br></br></p>
 
