@@ -110,25 +110,12 @@
 				
 				// Add CrimeScore to structure
 				csPlaces[id].crimescore = parseFloat(data.places[i].crimescore);
-				console.log(csPlaces[id]);
 				
-				var a;
-				var t = Math.floor(csPlaces[id].crimescore);
+				// Color interpolator
+				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
+				var scaledCrimeScore = csPlaces[id].crimescore / 100;
 				
-				// If CrimeScore is 
-				if (t < 10)
-					a = "0" + t.toString();
-				else
-					a = t.toString();
-				
-				var b;
-				if ((100 - t) < 10)
-					b = "0" + (100-t).toString();
-				else
-					b = (100 - t).toString();
-				
-				var url = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
-				console.log(url);
+				var url = 'http://www.googlemapsmarkers.com/v1/' + greenRedInterpolator(scaledCrimeScore).substring(1) +'/';
 				var latlng = new google.maps.LatLng(csPlaces[id].latitude,csPlaces[id].longitude);
 				var marker = new google.maps.Marker({
 					position: latlng ,
