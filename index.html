@@ -93,72 +93,44 @@
 
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-
-
+			
 			// Iterate over returned CrimeScores
 			for (var i = 0; i < data.places.length ; i++) {
 				// Store lat/lng
 				var lat = parseFloat(data.places[i].latitude);
 				var lng = parseFloat(data.places[i].longitude);
-
-
+				
 				// Get the id for this lat/lng
 				var id = identifierForLatLng(lat, lng);
-
-
+				
 				// If there wasn't already an entry for this ID, make one
 				if (csPlaces[id] === undefined)
 					csPlaces[id] = new csPlace(lat, lng);
-
-
+				
+				// Local pointer to csPlaces entry
+				var place = csPlaces[id];
+				
 				// Add CrimeScore to structure
-				csPlaces[id].crimescore = parseFloat(data.places[i].crimescore);
-				console.log(csPlaces[id]);
-                                
-                                
-						 // Shashi's code
-						    var a;
-                                                                var t = Math.ceil(csPlaces[id].crimescore);
-						 		if ( t< 10)
-						 			a = "0" + t.toString();
-						 		else
-						 			a = t.toString();
-						 		
-						 		var b;
-						 		if ((100 - t) < 10)
-						 			b = "0" + (100-t).toString();
-						 		else
-						 			b = (100 - t).toString();
-						 		
-                                                                
-						 		var url = 'http://www.googlemapsmarkers.com/v1/' + a + b +'00/';
-                                                                
-                                                                var latlng = new google.maps.LatLng(csPlaces[id].latitude,csPlaces[id].longitude,false);
-                                                                
-                                                                marker[j] = new google.maps.Marker({
-                                                                                                    position: latlng ,
-                                                                                                    map: map,
-                                                                                                    icon: url
-                                                                                                    });
-                                                                 	infowindow[j] = new google.maps.InfoWindow();
-						 	//alert(ic[j]);
-						 	infowindow[j].setContent(csPlaces[id].crimescore.toString());
-						 	//infowindow[j].open(map, marker[j]);
-						 	
-						 		
-                                                        
-						 
-                                                                
-						 
-						// 
-						// for (j = 0; j < loc.length; j++)
-						// {
-						// 	//alert(j);
-						
-						// 	
-						
+				place.crimescore = parseFloat(data.places[i].crimescore);
+				
+				// Color interpolator
+				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
+				var scaledCrimeScore = place.crimescore / 100;
+				
+				var url = 'http://www.googlemapsmarkers.com/v1/' + greenRedInterpolator(scaledCrimeScore).substring(1) +'/';
+				var latLng = new google.maps.LatLng(place.latitude, place.longitude);
+				place.marker = new google.maps.Marker({
+					position: latLng,
+					map: map,
+					icon: url
+				});
+				
+				place.infoWindow = new google.maps.InfoWindow({content: "Test content."});
+				
+				google.maps.event.addListener(place.marker, 'click', function() {
+					place.infoWindow.open(map, place.marker);
+				});
 			}
-                        infowind();
 		};
 
 
