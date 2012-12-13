@@ -258,7 +258,6 @@ if (status == 0) {
 	
 	# Change this line to your own application. You can add more than one
 	# application if you like
-	s$add(name = "test", app = system.file("exampleApps/RookTestApp.R", package = "Rook"))
 	
 	s$add(name="crimescores",
 		app = function(env) {
@@ -272,7 +271,7 @@ if (status == 0) {
 			res$finish()
 		}
 	)
-	
+
 	# Now make the console go to sleep. Of course the web server will still be
 	# running.
 	while (TRUE) Sys.sleep(24 * 60 * 60)
