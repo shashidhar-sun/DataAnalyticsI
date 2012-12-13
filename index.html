@@ -279,56 +279,157 @@
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
 
 				if (demoNumber == 0) {
-					var slider1Value = 108;
-					var slider1Min = 1;
-					var slider1Max = 108;
+					var slider1Value = 5;
+					var slider1Min = 0;
+					var slider1Max = 10000;
+					var slider1Step = 100;
 					$("#slider1").slider("option", "min", slider1Min);
 					$("#slider1").slider("option", "max", slider1Max);
 					$("#slider1").slider("value", slider1Value);
-					$("#parm1Value").text("1.08");
+					$("#slider1").slider( "option", "step", slider1Step );
+					//$("#parm1Value").text("1.08");
 
-					var slider2Value = 0;
+					var slider2Value = 5;
 					var slider2Min = 0;
-					var slider2Max = 100;
+					var slider2Max = 10000;
+					var slider2Step = 100;
 					$("#slider2").slider("option", "min", slider2Min);
 					$("#slider2").slider("option", "max", slider2Max);
 					$("#slider2").slider("value", slider2Value);
+					$("#slider2").slider( "option", "step", slider2Step );
 
-					var slider3Value = 0;
+					var slider3Value = 5;
 					var slider3Min = 0;
-					var slider3Max = 100;
-					$(".slider").on("slide", function(event, ui) {});
+					var slider3Max = 10000;
+					var slider3Step = 100;
 					$("#slider3").slider("option", "min", slider3Min);
 					$("#slider3").slider("option", "max", slider3Max);
 					$("#slider3").slider("value", slider3Value);
-					$(".slider").on("slide", handleSliderChange);
+					$("#slider3").slider( "option", "step", slider3Step );
 
-					var slider4Value = 0;
+					var slider4Value = 5;
 					var slider4Min = 0;
-					var slider4Max = 100;
-					$(".slider").on("slide", function(event, ui) {});
+					var slider4Max = 10000;
+					var slider4Step = 100;
 					$("#slider4").slider("option", "min", slider4Min);
 					$("#slider4").slider("option", "max", slider4Max);
 					$("#slider4").slider("value", slider4Value);
-					$(".slider").on("slide", handleSliderChange);
+					$("#slider4").slider( "option", "step", slider4Step );
 
-					var slider5Value = 0;
+					var slider5Value = 5;
 					var slider5Min = 0;
-					var slider5Max = 100;
-					$(".slider").on("slide", function(event, ui) {});
+					var slider5Max = 10000;
+					var slider5Step = 100;
 					$("#slider5").slider("option", "min", slider5Min);
 					$("#slider5").slider("option", "max", slider5Max);
 					$("#slider5").slider("value", slider5Value);
+					$("#slider5").slider( "option", "step", slider5Step );
 					$(".slider").on("slide", handleSliderChange);
 
-					var slider6Value = 0;
+					var slider6Value = 5;
 					var slider6Min = 0;
-					var slider6Max = 100;
-					$(".slider").on("slide", function(event, ui) {});
+					var slider6Max = 10000;
+					var slider6Step = 100;
 					$("#slider6").slider("option", "min", slider6Min);
 					$("#slider6").slider("option", "max", slider6Max);
 					$("#slider6").slider("value", slider6Value);
+					$("#slider6").slider( "option", "step", slider6Step );
 					$(".slider").on("slide", handleSliderChange);
+					
+					var slider7Value = 5;
+					var slider7Min = 0;
+					var slider7Max = 10000;
+					var slider7Step = 100;
+					$("#slider7").slider("option", "min", slider7Min);
+					$("#slider7").slider("option", "max", slider7Max);
+					$("#slider7").slider("value", slider7Value);
+					$("#slider7").slider( "option", "step", slider7Step );
+					$(".slider").on("slide", handleSliderChange);
+					
+					var slider8Value = 5;
+					var slider8Min = 0;
+					var slider8Max = 10000;
+					var slider8Step = 100;
+					$("#slider8").slider("option", "min", slider8Min);
+					$("#slider8").slider("option", "max", slider8Max);
+					$("#slider8").slider("value", slider8Value);
+					$("#slider8").slider( "option", "step", slider8Step );
+					$(".slider").on("slide", handleSliderChange);
+					
+					var slider9Value = 5;
+					var slider9Min = 0;
+					var slider9Max = 10000;
+					var slider9Step = 100;
+					$("#slider9").slider("option", "min", slider9Min);
+					$("#slider9").slider("option", "max", slider9Max);
+					$("#slider9").slider("value", slider9Value);
+					$("#slider9").slider( "option", "step", slider9Step );
+					$(".slider").on("slide", handleSliderChange);
+					console.log("After slider 9");
+					var slider10Value = 5;
+					var slider10Min = 0;
+					var slider10Max = 10000;
+					var slider10Step = 100;
+					$("#slider10").slider("option", "min", slider10Min);
+					$("#slider10").slider("option", "max", slider10Max);
+					$("#slider10").slider("value", slider10Value);
+					$("#slider10").slider( "option", "step", slider10Step );
+					$(".slider").on("slide", handleSliderChange);
+					console.log("After slider 10");
+					var slider11Value = 5;
+					var slider11Min = 0;
+					var slider11Max = 10000;
+					var slider11Step = 100;
+					$("#slider11").slider("option", "min", slider11Min);
+					$("#slider11").slider("option", "max", slider11Max);
+					$("#slider11").slider("value", slider11Value);
+					$("#slider11").slider( "option", "step", slider11Step );
+					
+					var slider12Value = 5;
+					var slider12Min = 0;
+					var slider12Max = 10000;
+					var slider12Step = 100;
+					$("#slider12").slider("option", "min", slider12Min);
+					$("#slider12").slider("option", "max", slider12Max);
+					$("#slider12").slider("value", slider12Value);
+					$("#slider12").slider( "option", "step", slider12Step );
+					$(".slider").on("slide", handleSliderChange);
+					
+					var slider13Value = 5;
+					var slider13Min = 0;
+					var slider13Max = 10000;
+					var slider13Step = 100;
+					$("#slider13").slider("option", "min", slider13Min);
+					$("#slider13").slider("option", "max", slider13Max);
+					$("#slider13").slider("value", slider13Value);
+					$("#slider13").slider( "option", "step", slider13Step );
+					
+					var slider14Value = 5;
+					var slider14Min = 0;
+					var slider14Max = 10000;
+					var slider14Step = 100;
+					$("#slider14").slider("option", "min", slider14Min);
+					$("#slider14").slider("option", "max", slider14Max);
+					$("#slider14").slider("value", slider14Value);
+					$("#slider14").slider( "option", "step", slider14Step );
+					
+					var slider15Value = 5;
+					var slider15Min = 0;
+					var slider15Max = 10000;
+					var slider15Step = 100;
+					$("#slider15").slider("option", "min", slider15Min);
+					$("#slider15").slider("option", "max", slider15Max);
+					$("#slider15").slider("value", slider15Value);
+					$("#slider15").slider( "option", "step", slider15Step );
+					
+					var slider16Value = 5;
+					var slider16Min = 0;
+					var slider16Max = 10000;
+					var slider16Step = 100;
+					$("#slider16").slider("option", "min", slider16Min);
+					$("#slider16").slider("option", "max", slider16Max);
+					$("#slider16").slider("value", slider16Value);
+					$("#slider16").slider( "option", "step", slider16Step );
 				} else if (demoNumber == 1) {
 					var c;
 				}
