@@ -234,10 +234,22 @@ coord=cbind(coord.lat,coord.long)
 dat.test=data.frame(do.distance(coord.lat,coord.long))
 predict(rf2,dat.test)
 
-City.Planner<-function(lat,long){
-  dat.test=data.frame(do.distance(coord.lat,coord.long))
-  Crime.Score=predict(rf2,dat.test)    
-  return(cbind(Crime.Score,dat.test))
+City.Planner<-function(dat){
+  if (length(dat) ==2){
+    dat.test=data.frame(do.distance(dat[1],dat[2]))
+    crime.score=predict(rf2,dat.test)
+    out=data.frame(c(crime.score,dat.test))
+    colnames(out)[1]="crime.score"
+    out.list=list(out)
+    return(toJSON(out.list))
+  }
+  else {
+    crime.score=predict(rf2,dat[-c(1:2)])
+    out=data.frame(c(crime.score,dat))
+    colnames(out)[1]='crime.score'
+    out.list=list(out)
+    return(toJSON(out.list))
+  }
 }
 City.Planner(coord.lat,coord.long)
 
@@ -260,6 +272,19 @@ if (status == 0) {
 	# application if you like
 	
 	s$add(name="crimescores",
+		app = function(env) {
+			req <- Request$new(env)
+			res <- Response$new()
+			res$header('Content-type', 'application/javascript')
+			coordinates <- toString(req$params()["coords"])
+			res$write('processCrimeScores(')
+			res$write(Predict.CrimeScore.JSON(coordinates))
+			res$write(')')
+			res$finish()
+		}
+	)
+	
+	s$add(name="planner"m
 		app = function(env) {
 			req <- Request$new(env)
 			res <- Response$new()
