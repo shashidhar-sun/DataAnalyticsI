@@ -7,7 +7,7 @@
 #######################################################################
 
 
-setwd("/var/www/crimescore/")
+setwd("/home/crimescore/sites/crimescore/")
 start.time=Sys.time()
 #install.packages("~/Dropbox/Data Analytics/Mac Packages/geoPlot_2.0.tgz", repos = NULL)
 #install.packages("~/Dropbox/Data Analytics/Mac Packages/plotGoogleMaps_1.3.tgz", repos = NULL)
