@@ -233,11 +233,32 @@
 			this.details = -1;
 		}
 
-		var explorePlace = {};
-
+		var explorePlace = function (data){
+			this.parameters = data;     //data is innitially all the parameters received from cityplanne.in
+			};
+			
+		var explorePlaces; // this variable will contain the output that will go o cityPlanner.out
+		
+		//this function is called by JSON for cityPlanner.In
+		function parseCityPlannerIn(jsonpdata)
+		{
+			var jsondata = (jsonpdata.replace("{ 'In': [","")).replace("] }","");;
+			var s = jsondata.split(",");
+			var data = new Array();
+			for(var i in s)
+				data[i] = parseFloat(s[i]);
+			explorePlaces = new explorePlace(data);
+			
+			
+			
+			
+		}
+		
+		
 		// Main startup routine
 		var initialize = function() 
 		{
+			
 			$("#search").fadeIn(500);
 
 			addSearchBoxListener();
@@ -260,7 +281,25 @@
 			$(".slider").slider();
 			$("#experimentPointSelect").click(selectExperimentPoint);
 			$(".slider").on("slide", handleSliderChange);
+
+			$("#submitPoint").click(selectSubmitPoint);
 		};
+		var selectSubmitPoint = function()  {
+				for(var i = 1; i<=15;i++ )
+				{
+					explorePlaces.parameters[i+2] = parseInt($("#parm" + i.toString()  + "Value").text());
+		
+				}
+				for(var i = 16; i<=18;i++ )
+				{
+					explorePlaces.parameters[i+2] = parseInt($("#parm" + i.toString()  + "Value").text())/1000;
+		
+				}
+			//Call backend HERE
+				
+					
+		};
+	
 
 		var selectExperimentPoint = function() {
 			removeMarkers();
@@ -279,157 +318,51 @@
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
 
 				if (demoNumber == 0) {
-					var slider1Value = 5;
-					var slider1Min = 0;
-					var slider1Max = 10000;
-					var slider1Step = 100;
-					$("#slider1").slider("option", "min", slider1Min);
-					$("#slider1").slider("option", "max", slider1Max);
-					$("#slider1").slider("value", slider1Value);
-					$("#slider1").slider( "option", "step", slider1Step );
-					//$("#parm1Value").text("1.08");
+					for(var i = 1;i<=15;i++)
+					{
+						var sliderValue = explorePlaces.parameters[i+2]*100;
+						var sliderMin = 0;
+						var sliderMax = 10000;
+						var sliderStep = 100;
+						$("#slider"+i.toString()).slider("option", "min", sliderMin);
+						$("#slider"+i.toString()).slider("option", "max", sliderMax);
+						$("#slider"+i.toString()).slider("value", sliderValue);
+						$("#slider"+i.toString()).slider( "option", "step", sliderStep );
+						$("#parm" + i.toString() + "Value").text((sliderValue/100).toString());
+						//$("#parm1Value").text("1.08");
+				        }
 
-					var slider2Value = 5;
-					var slider2Min = 0;
-					var slider2Max = 10000;
-					var slider2Step = 100;
-					$("#slider2").slider("option", "min", slider2Min);
-					$("#slider2").slider("option", "max", slider2Max);
-					$("#slider2").slider("value", slider2Value);
-					$("#slider2").slider( "option", "step", slider2Step );
-
-					var slider3Value = 5;
-					var slider3Min = 0;
-					var slider3Max = 10000;
-					var slider3Step = 100;
-					$("#slider3").slider("option", "min", slider3Min);
-					$("#slider3").slider("option", "max", slider3Max);
-					$("#slider3").slider("value", slider3Value);
-					$("#slider3").slider( "option", "step", slider3Step );
-
-					var slider4Value = 5;
-					var slider4Min = 0;
-					var slider4Max = 10000;
-					var slider4Step = 100;
-					$("#slider4").slider("option", "min", slider4Min);
-					$("#slider4").slider("option", "max", slider4Max);
-					$("#slider4").slider("value", slider4Value);
-					$("#slider4").slider( "option", "step", slider4Step );
-
-					var slider5Value = 5;
-					var slider5Min = 0;
-					var slider5Max = 10000;
-					var slider5Step = 100;
-					$("#slider5").slider("option", "min", slider5Min);
-					$("#slider5").slider("option", "max", slider5Max);
-					$("#slider5").slider("value", slider5Value);
-					$("#slider5").slider( "option", "step", slider5Step );
-					$(".slider").on("slide", handleSliderChange);
-
-					var slider6Value = 5;
-					var slider6Min = 0;
-					var slider6Max = 10000;
-					var slider6Step = 100;
-					$("#slider6").slider("option", "min", slider6Min);
-					$("#slider6").slider("option", "max", slider6Max);
-					$("#slider6").slider("value", slider6Value);
-					$("#slider6").slider( "option", "step", slider6Step );
-					$(".slider").on("slide", handleSliderChange);
 					
-					var slider7Value = 5;
-					var slider7Min = 0;
-					var slider7Max = 10000;
-					var slider7Step = 100;
-					$("#slider7").slider("option", "min", slider7Min);
-					$("#slider7").slider("option", "max", slider7Max);
-					$("#slider7").slider("value", slider7Value);
-					$("#slider7").slider( "option", "step", slider7Step );
-					$(".slider").on("slide", handleSliderChange);
 					
-					var slider8Value = 5;
-					var slider8Min = 0;
-					var slider8Max = 10000;
-					var slider8Step = 100;
-					$("#slider8").slider("option", "min", slider8Min);
-					$("#slider8").slider("option", "max", slider8Max);
-					$("#slider8").slider("value", slider8Value);
-					$("#slider8").slider( "option", "step", slider8Step );
-					$(".slider").on("slide", handleSliderChange);
-					
-					var slider9Value = 5;
-					var slider9Min = 0;
-					var slider9Max = 10000;
-					var slider9Step = 100;
-					$("#slider9").slider("option", "min", slider9Min);
-					$("#slider9").slider("option", "max", slider9Max);
-					$("#slider9").slider("value", slider9Value);
-					$("#slider9").slider( "option", "step", slider9Step );
-					$(".slider").on("slide", handleSliderChange);
-					console.log("After slider 9");
-					var slider10Value = 5;
-					var slider10Min = 0;
-					var slider10Max = 10000;
-					var slider10Step = 100;
-					$("#slider10").slider("option", "min", slider10Min);
-					$("#slider10").slider("option", "max", slider10Max);
-					$("#slider10").slider("value", slider10Value);
-					$("#slider10").slider( "option", "step", slider10Step );
-					$(".slider").on("slide", handleSliderChange);
-					console.log("After slider 10");
-					var slider11Value = 5;
-					var slider11Min = 0;
-					var slider11Max = 10000;
-					var slider11Step = 100;
-					$("#slider11").slider("option", "min", slider11Min);
-					$("#slider11").slider("option", "max", slider11Max);
-					$("#slider11").slider("value", slider11Value);
-					$("#slider11").slider( "option", "step", slider11Step );
-					
-					var slider12Value = 5;
-					var slider12Min = 0;
-					var slider12Max = 10000;
-					var slider12Step = 100;
-					$("#slider12").slider("option", "min", slider12Min);
-					$("#slider12").slider("option", "max", slider12Max);
-					$("#slider12").slider("value", slider12Value);
-					$("#slider12").slider( "option", "step", slider12Step );
-					$(".slider").on("slide", handleSliderChange);
-					
-					var slider13Value = 5;
-					var slider13Min = 0;
-					var slider13Max = 10000;
-					var slider13Step = 100;
-					$("#slider13").slider("option", "min", slider13Min);
-					$("#slider13").slider("option", "max", slider13Max);
-					$("#slider13").slider("value", slider13Value);
-					$("#slider13").slider( "option", "step", slider13Step );
-					
-					var slider14Value = 5;
-					var slider14Min = 0;
-					var slider14Max = 10000;
-					var slider14Step = 100;
-					$("#slider14").slider("option", "min", slider14Min);
-					$("#slider14").slider("option", "max", slider14Max);
-					$("#slider14").slider("value", slider14Value);
-					$("#slider14").slider( "option", "step", slider14Step );
-					
-					var slider15Value = 5;
-					var slider15Min = 0;
-					var slider15Max = 10000;
-					var slider15Step = 100;
-					$("#slider15").slider("option", "min", slider15Min);
-					$("#slider15").slider("option", "max", slider15Max);
-					$("#slider15").slider("value", slider15Value);
-					$("#slider15").slider( "option", "step", slider15Step );
-					
-					var slider16Value = 5;
+					var slider16Value = explorePlaces.parameters[18]*10000;
 					var slider16Min = 0;
-					var slider16Max = 10000;
+					var slider16Max = 1400000;
 					var slider16Step = 100;
 					$("#slider16").slider("option", "min", slider16Min);
 					$("#slider16").slider("option", "max", slider16Max);
 					$("#slider16").slider("value", slider16Value);
 					$("#slider16").slider( "option", "step", slider16Step );
+					$("#parm16Value").text((slider16Value/10).toString());
+					
+					var slider17Value = explorePlaces.parameters[19]*10000;
+					var slider17Min = 0;
+					var slider17Max = 1400000;
+					var slider17Step = 100;
+					$("#slider17").slider("option", "min", slider17Min);
+					$("#slider17").slider("option", "max", slider17Max);
+					$("#slider17").slider("value", slider17Value);
+					$("#slider17").slider( "option", "step", slider17Step );
+					$("#parm17Value").text((slider17Value/10).toString());
+					
+					var slider18Value = explorePlaces.parameters[20]*10000;
+					var slider18Min = 0;
+					var slider18Max = 1400000;
+					var slider18Step = 100;
+					$("#slider18").slider("option", "min", slider18Min);
+					$("#slider18").slider("option", "max", slider18Max);
+					$("#slider18").slider("value", slider18Value);
+					$("#slider18").slider( "option", "step", slider18Step );
+					$("#parm18Value").text((slider18Value/10).toString());
 				} else if (demoNumber == 1) {
 					var c;
 				}
@@ -439,9 +372,10 @@
 		}
 
 		var handleSliderChange = function(event, ui) {
-			var id = event.target.id.substring(event.target.id.length-1);
+			var id = event.target.id.replace("slider","");
 			var value = parseFloat(ui.value) / 100;
 			$("#parm" + id + "Value").text(value.toString());
+
 		};
 
 		// Get CrimeScores for an array of lat/lng coordinates
@@ -475,7 +409,7 @@
 
 		// Process returned CrimeScores
 		var processCrimeScores = function(data) {
-
+			
 
 			// Iterate over returned CrimeScores
 			for (var i = 0; i < data.places.length ; i++) {
@@ -677,8 +611,10 @@
 			}
 		};
 
-
+		
 		// Testing code
+		parseCityPlannerIn("{ 'In': [43.187, 38.674, -77.882,   17,12,11,10,9,8,7,6,5,4,3,2,1, 3, 4, 2.44, 3.33, 3.47] }");
+		
 		// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
 		// getCrimeScores(testArray);
     </script>
@@ -867,18 +803,19 @@
 				<div class="parmValue" id="parm15Value">0</div>
 				<div id="slider15" class="slider"></div>
 				
-				<div class="parmLabel">Distance to Military Installation</div>
+				<div class="parmLabel">Distance to Military Installation(meters)</div>
 				<div class="parmValue" id="parm16Value">0</div>
 				<div id="slider16" class="slider"></div>
 				
-				<div class="parmLabel">Distance to Police Station</div>
+				<div class="parmLabel">Distance to Police Station(meters)</div>
 				<div class="parmValue" id="parm17Value">0</div>
 				<div id="slider17" class="slider"></div>
 				
-				<div class="parmLabel">Distance to Public Housing</div>
+				<div class="parmLabel">Distance to Public Housing(meters)</div>
 				<div class="parmValue" id="parm18Value">0</div>
 				<div id="slider18" class="slider"></div>
-
+				
+				<input type="submit" id="submitPoint" value="Submit point">
 				
 			</div>
 		</div>
