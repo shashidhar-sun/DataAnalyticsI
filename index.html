@@ -224,7 +224,8 @@
 		var marker = new Array();
 		var detailSearchTimers = new Array();
 		var demoNumber = 0;
-
+		var idleTime = 0;
+		
 		var csPlace = function(lat, lng) {
 			this.latitude = lat;
 			this.longitude = lng;
@@ -299,7 +300,13 @@
 				
 					
 		};
-	
+		function timerIncrement() {
+				idleTime = idleTime + 1;
+				if (idleTime > 3) { //  20 secs
+					selectSubmitPoint();
+					alert("new crime score");
+				}
+			}
 
 		var selectExperimentPoint = function() {
 			removeMarkers();
@@ -316,7 +323,12 @@
 
 				// Color interpolator
 				var greenRedInterpolator = d3.interpolateHsl("#00FF00", "#FF0000");
-
+				
+				var idleInterval = setInterval("timerIncrement()", 5000);
+				$(document).mousemove(function (e) {
+					idleTime = 0;
+				 });
+				
 				if (demoNumber == 0) {
 					for(var i = 1;i<=15;i++)
 					{
