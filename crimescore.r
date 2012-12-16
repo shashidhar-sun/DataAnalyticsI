@@ -234,7 +234,9 @@ coord=cbind(coord.lat,coord.long)
 dat.test=data.frame(do.distance(coord.lat,coord.long))
 predict(rf2,dat.test)
 
-City.Planner<-function(dat){
+City.Planner<-function(vec.in){
+  dat=as.numeric(strsplit(vec.in,',')[[1]])
+  print(dat)
   if (length(dat) ==2){
     dat.test=data.frame(do.distance(dat[1],dat[2]))
     crime.score=predict(rf2,dat.test)
@@ -244,14 +246,17 @@ City.Planner<-function(dat){
     return(toJSON(out.list))
   }
   else {
-    crime.score=predict(rf2,dat[-c(1:2)])
+    dat=data.frame(cbind(t(dat[-c(1:2)])))
+    colnames(dat) = c("liq.count","banks.count","barber.count","carlot.count","dorm.count","education.count","embassy.count","hospital.count","hotel.count","industrial.count","museum.count","recreation.count","religious.count","vacant.count","vehicleservice.count","military.dist","police.dist","pub.housing.dist","university.dist")
+    crime.score=predict(rf2,dat)
     out=data.frame(c(crime.score,dat))
     colnames(out)[1]='crime.score'
     out.list=list(out)
     return(toJSON(out.list))
   }
 }
-City.Planner(coord.lat,coord.long)
+
+City.Planner(c("38.8325192140698,-76.9936390021642"))
 
 Sys.time()-start.time
 
@@ -284,14 +289,14 @@ if (status == 0) {
 		}
 	)
 	
-	s$add(name="planner"m
+	s$add(name="planner",
 		app = function(env) {
 			req <- Request$new(env)
 			res <- Response$new()
 			res$header('Content-type', 'application/javascript')
 			coordinates <- toString(req$params()["coords"])
-			res$write('processCrimeScores(')
-			res$write(Predict.CrimeScore.JSON(coordinates))
+			res$write('processPlanner(')
+			res$write(City.Planner(coordinates))
 			res$write(')')
 			res$finish()
 		}
