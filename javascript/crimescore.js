@@ -148,6 +148,7 @@ function timerIncrement() {
 	}
 }
 
+// Add one-time click handler to select a new point for experiment mode
 var selectExperimentPoint = function() {
 	removeMarkers();
 	resetExplore();
@@ -157,13 +158,11 @@ var selectExperimentPoint = function() {
 		map.panTo(event.latLng);
 		var latitude = event.latLng.lat();
 		var longitude = event.latLng.lng();
-		// var id = identifierForLatLng(latitude, longitude);
-		// csPlaces[id] = new csPlace(latitude, longitude);
-		// getCrimeScore(latitude, longitude);
 		getExperimentData([latitude, longitude]);
 	});
 }
 
+// Map between returned attributes from web service and acceptable element ID stringss
 var mapAttributeNames = function(attribute) {
 	switch (attribute) {
 		case "crime.score":
@@ -501,6 +500,7 @@ var processPlaceSearchResult = function(results, status) {
 	}
 };
 
+// Get place details after a delay to satisfy Google API access requirements
 var getPlaceDetailsAfterDelay = function(results, delay) {
 	var timer = setTimeout(function() {
 		for (var i = 0; i < results.length; i++) {
@@ -512,29 +512,23 @@ var getPlaceDetailsAfterDelay = function(results, delay) {
 };
 
 var processPlaceDetailSearchResult = function(place, status) {
+	
+	// If Places API is not up and running, just return
 	if (status != google.maps.places.PlacesServiceStatus.OK) {
-		console.log(status);
 		return;
 	}
-
+	
+	// Only interested in good places with geometry information
 	if (typeof(place) == "object" && place.geometry) {
 		var lat = place.geometry.location.lat();
 		var lng = place.geometry.location.lng();
 		var id = identifierForLatLng(lat, lng);
-
+		
 		// Create a new csPlace with coordinates and identifier
 		csPlaces[id] = new csPlace(lat, lng);
-		// csPlaces[id].reference = results[j].reference;
 		csPlaces[id].details = place;
 
 		// Fire off a request for a CrimeScore for each coordinate
 		getCrimeScore(lat, lng);
 	}
 };
-
-
-// Testing code
-// parseCityPlannerIn("{ 'In': [43.187, 38.674, -77.882,   17,12,11,10,9,8,7,6,5,4,3,2,1, 3, 4, 2.44, 3.33, 3.47] }");
-
-// var testArray = [38.8325192140698,-76.9936390021642,38.90398,-77.05510];
-// getCrimeScores(testArray);

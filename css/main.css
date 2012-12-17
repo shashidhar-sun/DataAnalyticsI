@@ -1,5 +1,7 @@
 html { height: 100% }
+
 body { height: 100%; margin: 500; padding: 0 }
+
 #map_canvas {
 	position: absolute;
 	top: 0;
@@ -10,10 +12,6 @@ body { height: 100%; margin: 500; padding: 0 }
 
 a {
 	text-decoration: none;
-}
-
-input[type=submit] {
-	opacity: 0.75;
 }
 
 #crimeScoreThreshold {
@@ -184,6 +182,10 @@ input#searchBox {
 	background-color: rgba(255, 255, 255, 0.72);
 	font-size: 18px;
 	border: 1px;
+}
+
+input[type=submit] {
+	opacity: 0.75;
 }
 
 td {
