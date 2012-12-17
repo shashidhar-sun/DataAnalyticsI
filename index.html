@@ -16,12 +16,6 @@
 	<body onload="initialize()">
 		<div id="header" class="shadow">
 			<h1>CrimeScore</h1>
-			<!--
-			<div id="modeSelect">
-				<h2>Choose a mode: <a href="#">Plan</a> | <a href="#">Explore</a></h2>
-			</div>
-			<span style="font-weight: bold;">Please enter the query in the search box or click on a point to find the crime score.&nbsp;<label></label></span>
-			-->
 			<div id="headerShadowBlocker"></div>
 		</div>
 		<div id="header-back" class="shadow"></div>
@@ -131,86 +125,85 @@
 			<input type="submit" id="submitSearch" value="Go" /><br />
 			(or <a href="javascript:launchExplore()" >Experiment</a>!)
 		</div>
-		<!-- <div id="planner"></div> -->
 		<div id="experiment" class="shadow">
 			<h2>Experiment Tool</h2>
 			<input type="submit" id="experimentPointSelect" value="Select a new point">
 			<div id="sandbox">
 				<div id="experimentCrimeScoreLogo"></div>
 				<div id="experimentSliders">
-				
+					
 					<div class="parmLabel">Liquor Store Count</div>
 					<div class="parmValue" id="liqcountValue">0</div>
 					<div id="liqcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Bank Count</div>
 					<div class="parmValue" id="bankscountValue">0</div>
 					<div id="bankscountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Barber Shop Count</div>
 					<div class="parmValue" id="barbercountValue">0</div>
 					<div id="barbercountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Car Lot Count</div>
 					<div class="parmValue" id="carlotcountValue">0</div>
 					<div id="carlotcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Dorm Count</div>
 					<div class="parmValue" id="dormcountValue">0</div>
 					<div id="dormcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">School Count</div>
 					<div class="parmValue" id="educationcountValue">0</div>
 					<div id="educationcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Embassy Count</div>
 					<div class="parmValue" id="embassycountValue">0</div>
 					<div id="embassycountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Hospital Count</div>
 					<div class="parmValue" id="hospitalcountValue">0</div>
 					<div id="hospitalcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Hotel Count</div>
 					<div class="parmValue" id="hotelcountValue">0</div>
 					<div id="hotelcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Industrial Area Count</div>
 					<div class="parmValue" id="industrialcountValue">0</div>
 					<div id="industrialcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Museum Count</div>
 					<div class="parmValue" id="museumcountValue">0</div>
 					<div id="museumcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Recreation Area Count</div>
 					<div class="parmValue" id="recreationcountValue">0</div>
 					<div id="recreationcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Religious Establishment Count</div>
 					<div class="parmValue" id="religiouscountValue">0</div>
 					<div id="religiouscountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Vacant Lot Count</div>
 					<div class="parmValue" id="vacantcountValue">0</div>
 					<div id="vacantcountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Vehicle Repair Shop Count</div>
 					<div class="parmValue" id="vehicleservicecountValue">0</div>
 					<div id="vehicleservicecountSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Distance to Military Installation (km)</div>
 					<div class="parmValue" id="militarydistValue">0</div>
 					<div id="militarydistSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Distance to Police Station (km)</div>
 					<div class="parmValue" id="policedistValue">0</div>
 					<div id="policedistSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Distance to Public Housing (km)</div>
 					<div class="parmValue" id="pubhousingdistValue">0</div>
 					<div id="pubhousingdistSlider" class="plannerSlider"></div>
-				
+					
 					<div class="parmLabel">Distance to University (km)</div>
 					<div class="parmValue" id="universitydistValue">0</div>
 					<div id="universitydistSlider" class="plannerSlider"></div>
